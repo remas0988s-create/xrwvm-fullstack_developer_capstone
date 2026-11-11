@@ -3,7 +3,7 @@ const { execFileSync } = require('node:child_process');
 const assert = require('node:assert/strict');
 const dir = process.env.EVIDENCE_DIR + '/';
 (async () => {
-  const browser = await chromium.launch({ headless: false, args: ['--start-maximized'] });
+  const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH, headless: false, args: ['--start-maximized'] });
   try {
     const page = await browser.newPage({ viewport: null });
     const base = 'http://127.0.0.1:8085';
@@ -12,7 +12,7 @@ const dir = process.env.EVIDENCE_DIR + '/';
     const shot = async (file) => {
       await page.bringToFront();
       await page.screenshot();
-      execFileSync('import', ['-window', 'root', dir + file + '.png']);
+      execFileSync('python', ['-c', 'import sys; from PIL import ImageGrab; ImageGrab.grab().save(sys.argv[1])', dir + file + '.png']);
       console.log(file + '.png ' + page.url());
     };
     await page.goto(base+'/admin/');
@@ -46,7 +46,7 @@ const dir = process.env.EVIDENCE_DIR + '/';
     await link('Review Dealer').first().waitFor();
     await page.getByText('capstone_driver',{exact:true}).waitFor();
     await shot('get_dealers_loggedin');
-    await page.getByLabel('State',{exact:true}).selectOption('Kansas');
+    await page.getByRole('combobox',{name:'State',exact:true}).selectOption('Kansas');
     await page.waitForURL('**/get_dealers/Kansas');
     await page.getByRole('cell',{name:'Kansas',exact:true}).first().waitFor();
     const rows = await page.locator('tbody tr').all();
@@ -60,8 +60,8 @@ const dir = process.env.EVIDENCE_DIR + '/';
     await link('Review Dealer').click();
     await page.getByLabel('Review',{exact:true}).fill('Fantastic service and a smooth purchase. This is a capstone test review.');
     await page.getByLabel('Purchase date').fill('2024-05-16');
-    await page.getByLabel('Vehicle').locator('option').nth(1).waitFor({state:'attached'});
-    await page.getByLabel('Vehicle').selectOption({index:1});
+    await page.getByRole('combobox',{name:'Vehicle',exact:true}).locator('option').nth(1).waitFor({state:'attached'});
+    await page.getByRole('combobox',{name:'Vehicle',exact:true}).selectOption({index:1});
     await shot('dealership_review_submission');
     await button('Post Review').click();
     await page.getByText('Fantastic service and a smooth purchase. This is a capstone test review.',{exact:true}).waitFor();
