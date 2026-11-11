@@ -1,8 +1,31 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>About Us | Cars Dealership</title><link rel="stylesheet" href="/static/bootstrap.min.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Us | Cars Dealership</title>
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
+</head>
 <body class="bg-light">
-<nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand" href="/">Cars Dealership</a><a class="text-white" href="/contact">Contact Us</a></div></nav>
-<main class="container py-5"><h1>About Us</h1><p class="lead">Cars Dealership helps you find branches and read reviews from other car buyers.</p><p>Browse our dealer directory by state, explore available vehicle makes and models, and share your purchase experience.</p><a class="btn btn-primary" href="/get_dealers">Find a dealership</a></main>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container justify-content-start gap-3">
+    <a class="navbar-brand" href="/">Cars Dealership</a>
+    <a class="nav-link text-white" href="/get_dealers">Dealers</a>
+    <a class="nav-link text-white fw-bold" href="/about" aria-current="page">About Us</a>
+    <a class="nav-link text-white" href="/contact">Contact Us</a>
+  </div>
+</nav>
+<main class="container py-5">
+  <h1>About Us</h1>
+  <p class="lead">Find a dealership, compare customer experiences, and share what you learned about your purchase.</p>
+  <img class="img-fluid rounded mb-4" src="/static/car_dealership.jpg" alt="Vehicles on display at a dealership" width="700">
+  <h2>Meet the demo team</h2>
+  <p>These sample contacts are for the Cars Dealership course demonstration.</p>
+  <div class="row g-3">
+    <div class="col-md-4"><article class="card h-100 card-body"><h3 class="h5">Avery Morgan</h3><p class="fw-bold">General Manager</p><p>Oversees dealership operations and customer service.</p><a href="mailto:avery@example.invalid">avery@example.invalid</a></article></div>
+    <div class="col-md-4"><article class="card h-100 card-body"><h3 class="h5">Jordan Reyes</h3><p class="fw-bold">Sales Lead</p><p>Helps customers compare vehicles and locate a branch.</p><a href="mailto:jordan@example.invalid">jordan@example.invalid</a></article></div>
+    <div class="col-md-4"><article class="card h-100 card-body"><h3 class="h5">Casey Parker</h3><p class="fw-bold">Customer Support</p><p>Handles questions about visits and reviews.</p><a href="mailto:casey@example.invalid">casey@example.invalid</a></article></div>
+  </div>
+</main>
 </body>
 </html>

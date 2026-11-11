@@ -1,8 +1,36 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Contact Us | Cars Dealership</title><link rel="stylesheet" href="/static/bootstrap.min.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact Us | Cars Dealership</title>
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
+</head>
 <body class="bg-light">
-<nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand" href="/">Cars Dealership</a><a class="text-white" href="/about">About Us</a></div></nav>
-<main class="container py-5"><h1>Contact Us</h1><p class="lead">For questions about a vehicle or visit, look up the dealership’s branch address.</p><a class="btn btn-primary" href="/get_dealers">Browse branch addresses</a><p class="mt-4">Cars Dealership is a course demo using sample dealership data.</p></main>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container justify-content-start gap-3">
+    <a class="navbar-brand" href="/">Cars Dealership</a>
+    <a class="nav-link text-white" href="/get_dealers">Dealers</a>
+    <a class="nav-link text-white" href="/about">About Us</a>
+    <a class="nav-link text-white fw-bold" href="/contact" aria-current="page">Contact Us</a>
+  </div>
+</nav>
+<main class="container py-5">
+  <h1>Contact Us</h1>
+  <div class="row g-4 align-items-start">
+    <div class="col-md-5"><img class="img-fluid rounded" src="/static/contactus.png" alt="Contact options"></div>
+    <div class="col-md-7">
+      <p class="lead">For a vehicle question or a visit, find the address of the dealership you want to contact.</p>
+      <address>
+        <strong>Cars Dealership demo support</strong><br>
+        Email: <a href="mailto:support@example.invalid">support@example.invalid</a><br>
+        Phone: <a href="tel:+19135550134">+1 913-555-0134</a><br>
+        Hours: Monday to Friday, 9 a.m. to 5 p.m. Central
+      </address>
+      <p>Contact details are examples for this course project.</p>
+      <a class="btn btn-primary" href="/get_dealers">Browse branch addresses</a>
+    </div>
+  </div>
+</main>
 </body>
 </html>

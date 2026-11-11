@@ -10,7 +10,8 @@ class DealershipTests(TestCase):
         credentials = {"userName": "test_driver", "password": "Sample-car-900!"}
         self.assertEqual(client.post("/djangoapp/register", credentials, "application/json").status_code, 403)
         result = client.post(
-            "/djangoapp/register", {**credentials, "passwordConfirmation": credentials["password"]},
+            "/djangoapp/register", {**credentials, "passwordConfirmation": credentials["password"],
+             "firstName": "Test", "lastName": "Driver", "email": "driver@example.invalid"},
             "application/json", HTTP_X_CSRFTOKEN=token(),
         )
         self.assertEqual(result.status_code, 201)

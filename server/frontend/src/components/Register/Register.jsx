@@ -23,10 +23,13 @@ export default function Register({ onSignIn }) {
     <h1>Create an account</h1>
     <form onSubmit={submit}>
       <label>Username<input name="userName" autoComplete="username" required /></label>
+      <label>First Name<input name="firstName" autoComplete="given-name" required /></label>
+      <label>Last Name<input name="lastName" autoComplete="family-name" required /></label>
+      <label>Email<input name="email" type="email" autoComplete="email" required /></label>
       <label>Password<input name="password" type="password" autoComplete="new-password" minLength={8} required /></label>
       <label>Confirm password<input name="passwordConfirmation" type="password" autoComplete="new-password" required /></label>
       {error && <p role="alert">{error}</p>}
-      <button>Create account</button>
+      <button>Register</button>
     </form>
     <Link to="/login">Already registered? Log in</Link>
   </section>;

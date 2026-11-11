@@ -1,8 +1,10 @@
 import json
 from datetime import date
+from urllib.parse import quote
 
 import requests
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django import forms
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -10,6 +12,15 @@ from django.views.decorators.http import require_GET, require_POST
 
 from .models import CarMake, CarModel
 from .restapis import analyze_review_sentiments, get_request, post_review
+
+
+class RegistrationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    email = forms.EmailField()
+
+    class Meta(UserCreationForm.Meta):
+        fields = ("username", "first_name", "last_name", "email")
 
 
 def reply(status=200, **data):
@@ -52,9 +63,11 @@ def logout_user(request):
 @require_POST
 def register(request):
     data = payload(request)
-    form = UserCreationForm({
+    form = RegistrationForm({
         "username": data.get("userName"), "password1": data.get("password"),
         "password2": data.get("passwordConfirmation"),
+        "first_name": data.get("firstName"), "last_name": data.get("lastName"),
+        "email": data.get("email"),
     })
     if not form.is_valid():
         return reply(400, error=" ".join(message for errors in form.errors.values() for message in errors))
@@ -75,7 +88,6 @@ def proxy(endpoint, field, require_result=False):
 
 @require_GET
 def get_dealerships(request, state=None):
-    from urllib.parse import quote
     endpoint = "fetchDealers" if not state or state.lower() == "all" else f"fetchDealers/{quote(state, safe='')}"
     return proxy(endpoint, "dealers")
 
