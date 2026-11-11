@@ -1,22 +1,26 @@
-# Uncomment the imports below before you add the function code
-# import requests
 import os
-from dotenv import load_dotenv
+from urllib.parse import quote
 
-load_dotenv()
+import requests
 
-backend_url = os.getenv(
-    'backend_url', default="http://localhost:3030")
-sentiment_analyzer_url = os.getenv(
-    'sentiment_analyzer_url',
-    default="http://localhost:5050/")
 
-# def get_request(endpoint, **kwargs):
-# Add code for get requests to back end
+def get_request(endpoint):
+    url = os.getenv("BACKEND_URL", "http://127.0.0.1:3030").rstrip("/")
+    response = requests.get(f"{url}/{endpoint}", timeout=5)
+    response.raise_for_status()
+    return response.json()
 
-# def analyze_review_sentiments(text):
-# request_url = sentiment_analyzer_url+"analyze/"+text
-# Add code for retrieving sentiments
 
-# def post_review(data_dict):
-# Add code for posting review
+def analyze_review_sentiments(text):
+    url = os.getenv("SENTIMENT_URL", "http://127.0.0.1:5050").rstrip("/")
+    response = requests.get(f"{url}/analyze/{quote(text, safe='')}", timeout=12)
+    response.raise_for_status()
+    return response.json()
+
+
+def post_review(data):
+    url = os.getenv("BACKEND_URL", "http://127.0.0.1:3030").rstrip("/")
+    headers = {"X-Internal-Token": os.getenv("INTERNAL_TOKEN", "")}
+    response = requests.post(f"{url}/insert_review", json=data, headers=headers, timeout=5)
+    response.raise_for_status()
+    return response.json()

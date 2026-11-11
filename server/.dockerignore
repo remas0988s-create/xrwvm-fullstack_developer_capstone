@@ -1,0 +1,6 @@
+**/node_modules
+frontend/build
+static
+**/__pycache__
+*.sqlite3
+.env

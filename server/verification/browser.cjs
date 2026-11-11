@@ -1,0 +1,73 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const dir = process.env.EVIDENCE_DIR + '/';
+(async () => {
+  const browser = await chromium.launch({ args:['--no-sandbox'] });
+  try {
+    const page = await browser.newPage({ viewport:{width:1280,height:860} });
+    const base = 'http://127.0.0.1:8085';
+    const link = (name) => page.getByRole('link', {name, exact:true});
+    const button = (name) => page.getByRole('button', {name, exact:true});
+    const shot = async (file) => {
+      await page.screenshot({path: dir + file + '.png'});
+      console.log(file + '.png ' + page.url());
+    };
+    await page.goto(base+'/admin/');
+    await page.getByLabel('Username:').fill('root');
+    await page.getByLabel('Password:').fill('Capstone-local-only-179!');
+    await button('Log in').click();
+    await page.getByRole('heading',{name:'Site administration'}).waitFor();
+    await page.getByText(/Welcome,.*root/i).waitFor();
+    await shot('admin_login');
+    await button('Log out').click();
+    await page.getByRole('heading',{name:'Logged out'}).waitFor();
+    await shot('admin_logout');
+    await page.goto(base+'/get_dealers');
+    await link('Holdlamis Car Dealership').waitFor();
+    assert.equal(await link('Review Dealer').count(),0);
+    await shot('get_dealers');
+    await link('Register').click();
+    await page.getByLabel('Username').fill('capstone_driver');
+    await page.getByLabel('Password',{exact:true}).fill('Sample-road-Driver984!');
+    await page.getByLabel('Confirm password').fill('Sample-road-Driver984!');
+    await button('Create account').click();
+    await button('Log out').waitFor();
+    await button('Log out').click();
+    await link('Log in').click();
+    await page.getByLabel('Username').fill('capstone_driver');
+    await page.getByLabel('Password').fill('Sample-road-Driver984!');
+    await button('Log in').click();
+    await link('Review Dealer').first().waitFor();
+    await page.getByText('capstone_driver',{exact:true}).waitFor();
+    await shot('get_dealers_loggedin');
+    await page.getByLabel('State',{exact:true}).selectOption('Kansas');
+    await page.waitForURL('**/get_dealers/Kansas');
+    await page.getByRole('cell',{name:'Kansas',exact:true}).first().waitFor();
+    const rows = await page.locator('tbody tr').all();
+    for (const row of rows) assert.equal(await row.locator('td').nth(3).innerText(),'Kansas');
+    await shot('dealersbystate');
+    await link('Dealers').click();
+    await link('Tempsoft Car Dealership').click();
+    await page.getByRole('heading',{name:'Customer reviews'}).waitFor();
+    await page.locator('article').first().waitFor();
+    await shot('dealer_id_reviews');
+    await link('Review Dealer').click();
+    await page.getByLabel('Review',{exact:true}).fill('Fantastic service and a smooth purchase. This is a capstone test review.');
+    await page.getByLabel('Purchase date').fill('2024-05-16');
+    await page.getByLabel('Vehicle').locator('option').nth(1).waitFor({state:'attached'});
+    await page.getByLabel('Vehicle').selectOption({index:1});
+    await shot('dealership_review_submission');
+    await button('Post Review').click();
+    await page.getByText('Fantastic service and a smooth purchase. This is a capstone test review.',{exact:true}).waitFor();
+    await shot('added_review');
+    await page.reload();
+    await page.getByText('Fantastic service and a smooth purchase. This is a capstone test review.',{exact:true}).waitFor();
+    await button('Log out').click();
+    await link('Log in').waitFor();
+    for (const [path, title] of [['/about','About Us'],['/contact','Contact Us']]) {
+      await page.goto(base+path);
+      await page.getByRole('heading',{name:title}).waitFor();
+    }
+    console.log('Browser assertions passed for admin, registration, login, logout, Kansas filter, review persistence, About and Contact.');
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode=1; });

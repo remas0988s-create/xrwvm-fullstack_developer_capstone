@@ -1,38 +1,27 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+:root { font: 16px/1.5 system-ui,sans-serif; color:#182b3a; background:#f2f6f8; }
+* { box-sizing:border-box; }
+body { margin:0; }
+header { background:#10283b; color:white; }
+nav { max-width:1136px; padding:1rem 1.5rem; margin:auto; display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
+nav a { color:white; text-decoration:none; }
+nav a:hover { text-decoration:underline; }
+.brand { font-weight:750; font-size:1.2rem; }
+.account { margin-left:auto; display:flex; align-items:center; gap:1rem; }
+main { max-width:1136px; padding:2rem 1.5rem; margin:auto; }
+h1 { margin:.25rem 0 .5rem; font-size:clamp(1.75rem, 4vw, 2.5rem); }
+a { color:#145d74; }
+button,.button { color:white; background:#145d74; border:0; padding:.6rem 1rem; border-radius:.4rem; cursor:pointer; font:inherit; text-decoration:none; display:inline-block; }
+button:disabled { opacity:.5; cursor:default; }
+.panel { background:white; border:1px solid #d4e0e6; border-radius:.65rem; padding:1.25rem; }
+.table-wrap { overflow:auto; padding:0; }
+table { border-collapse:collapse; width:100%; text-align:left; }
+th,td { padding:.65rem .85rem; border-bottom:1px solid #e1e8ec; }
+th { background:#e5eef2; }
+label { display:grid; gap:.3rem; margin-bottom:.9rem; font-weight:600; }
+input,textarea,select { width:100%; padding:.5rem .65rem; border:1px solid #859ba7; border-radius:.3rem; color:inherit; background:white; font:inherit; }
+.filter { max-width:18rem; }
+.form { max-width:34rem; margin:auto; }
+.form form { margin:1rem 0; }
+.reviews { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+.badge { margin-left:.5rem; background:#e5eef2; border-radius:.35rem; padding:.2rem .4rem; font-size:.8rem; }
+[role="alert"] { color:#a51d25; }

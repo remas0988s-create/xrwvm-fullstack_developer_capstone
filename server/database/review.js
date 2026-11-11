@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const reviews = new Schema({
 	id: {
-    type: Number,
+    type: String,
+    unique: true,
     required: true,
 	},
 	name: {
@@ -35,6 +36,7 @@ const reviews = new Schema({
     type: String,
     required: true
   },
+  sentiment: { type: String, enum: ["positive", "negative", "neutral"] },
   car_year: {
     type: Number,
     required: true

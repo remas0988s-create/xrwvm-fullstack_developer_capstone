@@ -1,2 +1,4 @@
-Flask
-nltk
+Flask>=3.1,<4
+requests>=2.32,<3
+gunicorn>=23,<24
+vaderSentiment==3.3.2
