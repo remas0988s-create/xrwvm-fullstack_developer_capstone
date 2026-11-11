@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dealership
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cars-dealership
+  template:
+    metadata:
+      labels:
+        app: cars-dealership
+    spec:
+      imagePullSecrets:
+        - name: icr
+      containers:
+        - name: web
+          image: us.icr.io/sn-labs-remas0988s/cars-web:v1
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: cars-runtime
+          env:
+            - name: PORT
+              value: "8000"
+            - name: DJANGO_DB_PATH
+              value: /runtime/django.sqlite3
+            - name: DJANGO_TRUSTED_ORIGINS
+              value: "https://remas0988s-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: "localhost,127.0.0.1,.labs.cognitiveclass.ai,.skills.network"
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+          readinessProbe:
+            httpGet:
+              path: /djangoapp/session
+              port: 8000
+              httpHeaders:
+                - {name: Host, value: localhost}
+            initialDelaySeconds: 3
+          volumeMounts:
+            - {name: django-data, mountPath: /runtime}
+        - name: api
+          image: us.icr.io/sn-labs-remas0988s/cars-api:v1
+          envFrom:
+            - secretRef:
+                name: cars-runtime
+          env:
+            - {name: PORT, value: "3030"}
+            - {name: HOST, value: "127.0.0.1"}
+            - {name: MONGO_URI, value: "mongodb://127.0.0.1:27017"}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+        - name: sentiment
+          image: us.icr.io/sn-labs-remas0988s/cars-sentiment:v1
+          env:
+            - {name: PORT, value: "5050"}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 256Mi}
+        - name: mongo
+          image: us.icr.io/sn-labs-remas0988s/cars-mongo:7.0
+          args: ["--bind_ip", "127.0.0.1"]
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {cpu: 500m, memory: 768Mi}
+          volumeMounts:
+            - {name: mongo-data, mountPath: /data/db}
+      volumes:
+        - {name: django-data, emptyDir: {}}
+        - {name: mongo-data, emptyDir: {}}

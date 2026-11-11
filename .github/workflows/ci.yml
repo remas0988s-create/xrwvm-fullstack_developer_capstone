@@ -39,6 +39,7 @@ jobs:
           curl --retry 10 --retry-connrefused --retry-delay 1 --fail --silent http://127.0.0.1:3030/fetchDealers/Kansas | python -c 'import json,sys; d=json.load(sys.stdin); assert d and all(x["state"]=="Kansas" for x in d)'
           curl --retry 10 --retry-connrefused --retry-delay 1 --fail --silent 'http://127.0.0.1:5050/analyze/Fantastic%20services' | python -c 'import json,sys; assert json.load(sys.stdin)["sentiment"]=="positive"'
       - name: Verify integrated application in Chromium
+        shell: bash
         run: |
           mkdir -p "$RUNNER_TEMP/capstone-evidence"
           export EVIDENCE_DIR="$RUNNER_TEMP/capstone-evidence"
@@ -62,3 +63,4 @@ jobs:
         with:
           name: browser-evidence
           path: ${{ runner.temp }}/capstone-evidence/
+          if-no-files-found: error
