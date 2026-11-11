@@ -1,15 +1,18 @@
 const { chromium } = require('playwright');
+const { execFileSync } = require('node:child_process');
 const assert = require('node:assert/strict');
 const dir = process.env.EVIDENCE_DIR + '/';
 (async () => {
-  const browser = await chromium.launch({ args:['--no-sandbox'] });
+  const browser = await chromium.launch({ headless: false, args: ['--start-maximized'] });
   try {
-    const page = await browser.newPage({ viewport:{width:1280,height:860} });
+    const page = await browser.newPage({ viewport: null });
     const base = 'http://127.0.0.1:8085';
     const link = (name) => page.getByRole('link', {name, exact:true});
     const button = (name) => page.getByRole('button', {name, exact:true});
     const shot = async (file) => {
-      await page.screenshot({path: dir + file + '.png'});
+      await page.bringToFront();
+      await page.screenshot();
+      execFileSync('import', ['-window', 'root', dir + file + '.png']);
       console.log(file + '.png ' + page.url());
     };
     await page.goto(base+'/admin/');

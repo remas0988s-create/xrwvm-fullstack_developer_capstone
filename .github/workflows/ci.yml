@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       DJANGO_DEBUG: "1"
     steps:
@@ -45,6 +45,7 @@ jobs:
           export PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/browsers"
           npm install --prefix "$RUNNER_TEMP/browser" playwright@1.56.1
           "$RUNNER_TEMP/browser/node_modules/.bin/playwright" install --with-deps chromium
+          sudo apt-get install -y imagemagick
           export NODE_PATH="$RUNNER_TEMP/browser/node_modules"
           export INTERNAL_TOKEN=ci-local-only LOCAL_REVIEW_FILE="$RUNNER_TEMP/reviews.json" DJANGO_DB_PATH="$RUNNER_TEMP/cars.sqlite3"
           node server/database/app.js &
@@ -55,7 +56,7 @@ jobs:
           DJANGO_SUPERUSER_PASSWORD='Capstone-local-only-179!' python manage.py createsuperuser --noinput --username root --email root@example.invalid
           python manage.py runserver 127.0.0.1:8085 --noreload &
           curl --retry 10 --retry-connrefused --retry-delay 1 --fail --silent http://127.0.0.1:8085/djangoapp/get_dealers >/dev/null
-          node verification/browser.cjs | tee "$EVIDENCE_DIR/browser_checks.txt"
+          xvfb-run -a -s "-screen 0 1360x960x24" node verification/browser.cjs | tee "$EVIDENCE_DIR/browser_checks.txt"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
